@@ -230,3 +230,34 @@ DeepSeek-R1 series support commercial use, allow for any modifications and deriv
 
 ## 9. Contact
 If you have any questions, please raise an issue or contact us at [service@deepseek.com](service@deepseek.com).
+
+
+# Environment
+```bash
+pip install vllm
+```
+
+# Download
+```bash
+huggingface-cli download deepseek-ai/DeepSeek-R1-Distill-Qwen-7B --local-dir /home/ec2-user/SageMaker/efs/Models/DeepSeek-R1-Distill-Qwen-7B --local-dir-use-symlinks False
+
+huggingface-cli download deepseek-ai/DeepSeek-R1-Distill-Qwen-14B --local-dir /home/ec2-user/SageMaker/efs/Models/DeepSeek-R1-Distill-Qwen-14B --local-dir-use-symlinks False
+
+huggingface-cli download deepseek-ai/DeepSeek-R1-Distill-Qwen-32B --local-dir /home/ec2-user/SageMaker/efs/Models/DeepSeek-R1-Distill-Qwen-32B --local-dir-use-symlinks False
+
+```
+
+```bash
+vllm serve /home/ec2-user/SageMaker/efs/Models/DeepSeek-R1-Distill-Qwen-32B --tensor-parallel-size 2 --max-model-len 32768 --enforce-eager --enable-reasoning --reasoning-parser deepseek_r1 --port 8000
+
+CUDA_VISIBLE_DEVICES=2 vllm serve /home/ec2-user/SageMaker/efs/Models/DeepSeek-R1-Distill-Qwen-14B --tensor-parallel-size 1 --max-model-len 32768 --enforce-eager --enable-reasoning --reasoning-parser deepseek_r1 --port 8001
+
+CUDA_VISIBLE_DEVICES=3 vllm serve /home/ec2-user/SageMaker/efs/Models/DeepSeek-R1-Distill-Qwen-7B --tensor-parallel-size 1 --max-model-len 32768 --enforce-eager --enable-reasoning --reasoning-parser deepseek_r1 --port 8002
+
+```
+
+or 
+
+```bash
+python3 -m sglang.launch_server --model /home/ec2-user/SageMaker/efs/Models/DeepSeek-R1-Distill-Qwen-32B --trust-remote-code --tp 2
+```
